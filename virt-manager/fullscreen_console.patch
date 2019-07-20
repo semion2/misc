@@ -1,0 +1,18 @@
+*** console.py	2019-07-19 17:04:04.885685739 +0300
+--- /usr/share/virt-manager/virtManager/console.py	2019-07-20 13:12:35.559137840 +0300
+***************
+*** 160,165 ****
+--- 160,172 ----
+          self.add_gsettings_handle(
+              self.config.on_console_accels_changed(self._refresh_enable_accel))
+  
++         self.topwin.connect('key-press-event', self.ctrl_alt_f, self)
++ 
++     def ctrl_alt_f(self, window, event, keysys):
++         if event.keyval == ord('f') and event.state & Gdk.ModifierType.CONTROL_MASK and event.state & Gdk.ModifierType.MOD1_MASK:
++             window = window.get_property('window')
++             is_fullscreen = bool(Gdk.WindowState.FULLSCREEN & window.get_state())
++             self._change_fullscreen(not is_fullscreen)
+  
+      def is_visible(self):
+          if self.topwin:
